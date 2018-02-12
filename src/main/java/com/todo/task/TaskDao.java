@@ -3,6 +3,7 @@ package com.todo.task;
 import com.todo.user.User;
 import com.todo.user.UserMapper;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -19,28 +20,28 @@ public class TaskDao {
             "completed_at= now() where id = %s";
     public static final String REMOVE_COMPLETED = "delete from tasks where completed_by is not NULL";
 
-    private Connection connection;
+    private DataSource ds;
     private UserMapper mapper;
 
-    public TaskDao(Connection connection) {
-        this.connection = connection;
+    public TaskDao(DataSource ds) {
+        this.ds = ds;
         this.mapper = new UserMapper();
     }
 
 
     public List<User> find() throws SQLException {
-        return mapper.getList(connection.createStatement().executeQuery(FIND_ALL));
+        return mapper.getList(ds.getConnection().createStatement().executeQuery(FIND_ALL));
     }
 
     public void save(String name) throws SQLException {
-        connection.createStatement().executeUpdate(format(INSERT, name));
+        ds.getConnection().createStatement().executeUpdate(format(INSERT, name));
     }
 
     public void markAsDone(Long taskId, Long userId) throws SQLException {
-        connection.createStatement().executeUpdate(format(MARK_COMPLETED, userId, taskId));
+        ds.getConnection().createStatement().executeUpdate(format(MARK_COMPLETED, userId, taskId));
     }
 
     public void removeCompleted() throws SQLException {
-        connection.createStatement().executeUpdate(REMOVE_COMPLETED);
+        ds.getConnection().createStatement().executeUpdate(REMOVE_COMPLETED);
     }
 }

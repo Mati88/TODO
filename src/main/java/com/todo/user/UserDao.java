@@ -1,5 +1,6 @@
 package com.todo.user;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,25 +15,25 @@ public class UserDao {
     public static final String FIND_ALL = "select * from user";
     public static final String SAVE = "insert into users(login, password) values('%s','%s')";
 
-    private Connection connection;
+    private DataSource dataSource;
     private UserMapper mapper;
 
-    public UserDao(Connection connection) {
-        this.connection = connection;
+    public UserDao(DataSource dataSource) {
+        this.dataSource = dataSource;
         this.mapper = new UserMapper();
     }
 
     public User getByLogin(String login) throws SQLException {
-        ResultSet res = connection.createStatement().executeQuery(
+        ResultSet res = dataSource.getConnection().createStatement().executeQuery(
                 format(BY_LOGIN, login)
         );
         if(!res.next()) throw new NoSuchElementException();
         return mapper.getSingle(res);
     }
     public List<User> find() throws SQLException{
-        return mapper.getList(connection.createStatement().executeQuery(FIND_ALL));
+        return mapper.getList(dataSource.getConnection().createStatement().executeQuery(FIND_ALL));
     }
     public void save(String login, String password) throws SQLException {
-        connection.createStatement().executeUpdate(format(SAVE, login, password));
+        dataSource.getConnection().createStatement().executeUpdate(format(SAVE, login, password));
     }
 }
