@@ -21,4 +21,5 @@ public class UserMapper {
       users.add(new User(res.getInt(ID), res.getString(LOGIN), res.getString(PASSWORD)));
     return users;
     }
+
 }

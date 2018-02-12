@@ -3,11 +3,17 @@ package com.todo.user;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.NoSuchElementException;
+
+import static java.lang.String.format;
 
 public class UserDao {
 
-    public static final String SELECT_FROM_USERS_WHERE_LOGIN_S = "select * from users where login = '%s'";
+    public static final String BY_LOGIN = "select * from users where login = '%s'";
+    public static final String FIND_ALL = "select * from user";
+    public static final String SAVE = "insert into users(login, password) values('%s','%s')";
+
     private Connection connection;
     private UserMapper mapper;
 
@@ -18,9 +24,15 @@ public class UserDao {
 
     public User getByLogin(String login) throws SQLException {
         ResultSet res = connection.createStatement().executeQuery(
-                String.format(SELECT_FROM_USERS_WHERE_LOGIN_S, login)
+                format(BY_LOGIN, login)
         );
         if(!res.next()) throw new NoSuchElementException();
         return mapper.getSingle(res);
+    }
+    public List<User> find() throws SQLException{
+        return mapper.getList(connection.createStatement().executeQuery(FIND_ALL));
+    }
+    public void save(String login, String password) throws SQLException {
+        connection.createStatement().executeUpdate(format(SAVE, login, password));
     }
 }
