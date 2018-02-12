@@ -16,7 +16,7 @@ public class DataSourceConfig {
         ds.setUsername(login);
         ds.setPassword(password);
         ds.setMaxTotal(MAX_TOTAL);
-        ds.setConnectionInitSqls(Collections.singletonList(INIT_SQL);
+        ds.setConnectionInitSqls(Collections.singletonList(INIT_SQL));
         return ds;
     }
 }
