@@ -11,10 +11,9 @@ public class Main {
                 "postgres", "postgres")) {
             try {
                 con.setAutoCommit(false);
-                con.createStatement().executeUpdate("insert into users(login, password) values ('xxxxx', 'test')");
+                con.createStatement().executeUpdate("insert into users(login, password) values ('xxxxx', 'test2')");
                 selectAllUsersAndPrint(con);
 
-                con.createStatement().executeUpdate("update users set login = null where 1=1");
 
                 con.rollback();
 
